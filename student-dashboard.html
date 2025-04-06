@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .profile-banner {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .student-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            margin: 20px 0;
+            padding: 20px;
+        }
+        .course-card {
+            margin-bottom: 15px;
+            transition: transform 0.2s;
+        }
+        .course-card:hover {
+            transform: translateY(-5px);
+        }
+        .menu-item {
+            cursor: pointer;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+        .menu-item:hover {
+            background-color: #f8f9fa;
+        }
+        .details-section {
+            display: none;
+        }
+        .details-section.active {
+            display: block;
+        }
+        .password-change-section {
+            display: none;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+        }
+        .student-card {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .details-section {
+            display: none;
+        }
+
+        .details-section.active {
+            display: block;
+        }
+
+        /* Chat Styles */
+        .chat-container {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            width: 300px;
+            height: 400px;
+            background: white;
+            box-shadow: -2px -2px 10px rgba(0,0,0,0.1);
+            border-radius: 10px 10px 0 0;
+            z-index: 1000;
+            display: none;
+        }
+
+        .chat-header {
+            padding: 10px;
+            background: #0d6efd;
+            color: white;
+            border-radius: 10px 10px 0 0;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-minimize {
+            cursor: pointer;
+        }
+
+        .chat-body {
+            height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+            background: #f8f9fa;
+        }
+
+        .chat-input-container {
+            padding: 10px;
+            border-top: 1px solid #dee2e6;
+            background: white;
+        }
+
+        .chat-message {
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            border-radius: 15px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+
+        .chat-message.sent {
+            background: #0d6efd;
+            color: white;
+            margin-left: auto;
+        }
+
+        .chat-message.received {
+            background: #e9ecef;
+            color: black;
+        }
+
+        .chat-button {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            width: 50px;
+            height: 50px;
+            background: #0d6efd;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+
+        .chat-button:hover {
+            background: #0b5ed7;
+        }
+
+        .chat-menu {
+            position: fixed;
+            right: 80px;
+            bottom: 80px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: none;
+            z-index: 1000;
+        }
+
+        .chat-menu.show {
+            display: block;
+        }
+
+        .chat-menu-item {
+            padding: 10px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-menu-item:hover {
+            background: #f8f9fa;
+        }
+
+        .chat-menu-item i {
+            width: 20px;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <!-- Top Banner -->
+    <div class="profile-banner">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <div class="profile-photo me-2">
+                        <img id="profilePhotoDisplay" src="https://via.placeholder.com/40" alt="Profile Photo" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                    </div>
+                    <h4 class="mb-0">Aryan Singh</h4>
+                </div>
+                <div>
+                    <i class="fas fa-bell me-3"></i>
+                    <i class="fas fa-cog" data-bs-toggle="modal" data-bs-target="#settingsModal" style="cursor: pointer;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container py-4">
+        <!-- Profile Summary Card -->
+        <div class="student-card mb-4" id="profileSection">
+            <div class="row align-items-center">
+                <div class="col-md-2 text-center">
+                    <img id="mainProfilePhoto" src="https://via.placeholder.com/150" alt="Profile Photo" class="rounded-circle mb-2" style="width: 150px; height: 150px; object-fit: cover;">
+                </div>
+                <div class="col-md-10">
+                    <h4 id="studentName"></h4>
+                    <p class="mb-1" id="studentId"><strong>Student ID:</strong></p>
+                    <p class="mb-1" id="studentEmail"><strong>Email:</strong></p>
+                    <p class="mb-0" id="studentPhone"><strong>Phone:</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Courses Section -->
+        <div class="details-section student-card mb-4" id="coursesSection" style="display: none;">
+            <h5 class="mb-4">My Courses</h5>
+            <div class="row" id="coursesList">
+                <!-- Courses will be dynamically added here -->
+            </div>
+        </div>
+
+        <!-- Communication Section -->
+        <div class="details-section student-card mb-4" id="communicationSection" style="display: none;">
+            <h5 class="mb-4">Communication Hub</h5>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="list-group" id="chatList">
+                        <a href="#" class="list-group-item list-group-item-action active" data-type="batch">Batch Group Chat</a>
+                        <a href="#" class="list-group-item list-group-item-action" data-type="professors">Professors</a>
+                        <a href="#" class="list-group-item list-group-item-action" data-type="tutors">Tutors</a>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header" id="chatHeader">Batch Group Chat</div>
+                        <div class="card-body" style="height: 300px; overflow-y: auto;" id="chatMessages"></div>
+                        <div class="card-footer">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="messageInput" placeholder="Type your message...">
+                                <button class="btn btn-primary" id="sendMessage">Send</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Details Section -->
+        <div id="contactDetails" class="details-section student-card mb-4">
+            <h5 class="mb-4">Contact Details</h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <p id="contactEmail"><strong>Email:</strong></p>
+                    <p id="contactPhone"><strong>Phone Number:</strong></p>
+                    <p id="contactAddress"><strong>Address:</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enrollment Details Section -->
+        <div id="enrollmentDetails" class="details-section student-card mb-4">
+            <h5 class="mb-4">Enrollment Details</h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <p id="enrollmentId"><strong>Student ID:</strong></p>
+                    <p id="enrollmentCourse"><strong>Course:</strong></p>
+                    <p id="enrollmentSection"><strong>Section:</strong></p>
+                    <p id="enrollmentBatch"><strong>Batch:</strong></p>
+                    <p id="enrollmentDob"><strong>DOB:</strong></p>
+                    <p id="enrollmentCategory"><strong>Category:</strong></p>
+                    <p id="enrollmentGender"><strong>Gender:</strong></p>
+                </div>
+                <div class="col-md-6">
+                    <p id="enrollmentState"><strong>Domicile State:</strong></p>
+                    <p id="enrollmentLanguage"><strong>Language spoken:</strong></p>
+                    <p id="enrollmentReligion"><strong>Religion:</strong></p>
+                    <p id="enrollmentBloodGroup"><strong>Blood Group:</strong></p>
+                    <p id="enrollmentNationality"><strong>Nationality:</strong></p>
+                    <p id="enrollmentMaritalStatus"><strong>Marital Status:</strong></p>
+                    <p id="enrollmentAadhar"><strong>Aadhar Number:</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Courses Section -->
+        <h5 class="mt-4 mb-3">Courses Assigned</h5>
+        <div class="row">
+            <div class="col-md-6 col-lg-3">
+                <div class="card course-card">
+                    <div class="card-body">
+                        <h6 class="card-title">Sensor Technology</h6>
+                        <p class="card-text text-muted">Course Code: ST101</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card course-card">
+                    <div class="card-body">
+                        <h6 class="card-title">English</h6>
+                        <p class="card-text text-muted">Course Code: FD201</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card course-card">
+                    <div class="card-body">
+                        <h6 class="card-title">Introduction to Python</h6>
+                        <p class="card-text text-muted">Course Code: AI301</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card course-card">
+                    <div class="card-body">
+                        <h6 class="card-title">Linux</h6>
+                        <p class="card-text text-muted">Course Code: LI401</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu Section -->
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">Menu</h5>
+                        <div class="menu-item" onclick="showSection('contactDetails')">
+                            <i class="fas fa-address-card me-2"></i>
+                            Contact Details
+                        </div>
+                        <div class="menu-item" onclick="showSection('enrollmentDetails')">
+                            <i class="fas fa-user-graduate me-2"></i>
+                            Enrollment Details
+                        </div>
+                        <div class="menu-item" onclick="showSection('passwordChange')">
+                            <i class="fas fa-key me-2"></i>
+                            Change Password
+                        </div>
+                        <div class="menu-item">
+                            <i class="fas fa-book-open me-2"></i>
+                            Examination Schedule
+                        </div>
+                        <div class="menu-item">
+                            <i class="fas fa-chart-bar me-2"></i>
+                            Results
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <!-- Password Change Section -->
+                <div id="passwordChange" class="details-section card">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4">Change Password</h5>
+                        <form id="passwordChangeForm">
+                            <div class="mb-3">
+                                <label for="currentPassword" class="form-label">Current Password</label>
+                                <input type="password" class="form-control" id="currentPassword" required>
+                            </div>
+                            <div id="newPasswordFields" style="display: none;">
+                                <div class="mb-3">
+                                    <label for="newPassword" class="form-label">New Password</label>
+                                    <input type="password" class="form-control" id="newPassword">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="confirmPassword" class="form-label">Confirm New Password</label>
+                                    <input type="password" class="form-control" id="confirmPassword">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <button type="button" id="verifyCurrentPassword" class="btn btn-primary">Continue</button>
+                                <button type="button" id="changePassword" class="btn btn-success" style="display: none;">Change Password</button>
+                            </div>
+                            <div class="mt-3">
+                                <a href="#" id="forgotPasswordLink" class="text-primary text-decoration-none">Forgot Password?</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Interface -->
+        <div class="chat-button" id="chatButton">
+            <i class="fas fa-comments"></i>
+        </div>
+
+        <div class="chat-menu" id="chatMenu">
+            <div class="chat-menu-item" data-target="faculty">
+                <i class="fas fa-chalkboard-teacher"></i> Chat with Faculty
+            </div>
+            <div class="chat-menu-item" data-target="tutors">
+                <i class="fas fa-user-graduate"></i> Chat with Tutors
+            </div>
+            <div class="chat-menu-item" data-target="students">
+                <i class="fas fa-users"></i> Chat with Students
+            </div>
+        </div>
+
+        <div class="chat-container" id="facultyChat">
+            <div class="chat-header">
+                <span>Chat with Faculty</span>
+                <span class="chat-minimize">−</span>
+            </div>
+            <div class="chat-body" id="facultyChatBody"></div>
+            <div class="chat-input-container">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Type your message..." id="facultyChatInput">
+                    <button class="btn btn-primary" onclick="sendMessage('faculty')">Send</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-container" id="tutorsChat">
+            <div class="chat-header">
+                <span>Chat with Tutors</span>
+                <span class="chat-minimize">−</span>
+            </div>
+            <div class="chat-body" id="tutorsChatBody"></div>
+            <div class="chat-input-container">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Type your message..." id="tutorsChatInput">
+                    <button class="btn btn-primary" onclick="sendMessage('tutors')">Send</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-container" id="studentsChat">
+            <div class="chat-header">
+                <span>Chat with Students</span>
+                <span class="chat-minimize">−</span>
+            </div>
+            <div class="chat-body" id="studentsChatBody"></div>
+            <div class="chat-input-container">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Type your message..." id="studentsChatInput">
+                    <button class="btn btn-primary" onclick="sendMessage('students')">Send</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Modal -->
+        <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="settingsModalLabel">Edit Profile</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="settingsForm">
+                            <div class="mb-3 text-center">
+                                <img id="profilePreview" src="https://via.placeholder.com/150" alt="Profile Preview" class="rounded-circle mb-2" style="width: 150px; height: 150px; object-fit: cover;">
+                                <div>
+                                    <input type="file" id="profilePhotoInput" accept="image/*" class="form-control">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="phoneNumber" class="form-label">Phone Number</label>
+                                <input type="tel" class="form-control" id="phoneNumber" value="+917451812065">
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email address</label>
+                                <input type="email" class="form-control" id="email" value="nvsharyan@gmail.com">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="saveSettings">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notification Modal -->
+        <div class="modal fade" id="notificationModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Notifications</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="notificationList" style="max-height: 400px; overflow-y: auto;">
+                            <div class="text-center text-muted" id="noNotifications">Nothing to show here</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Course Details Modal -->
+        <div class="modal fade" id="courseModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="courseModalTitle">Course Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h6 class="card-subtitle mb-2 text-muted">Assignments</h6>
+                                        <div id="assignmentCount" class="h3">0</div>
+                                        <small class="text-muted">Total Assignments</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h6 class="card-subtitle mb-2 text-muted">Pending</h6>
+                                        <div id="pendingCount" class="h3 text-warning">0</div>
+                                        <small class="text-muted">Due Assignments</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h6 class="card-subtitle mb-2 text-muted">Average Grade</h6>
+                                        <div id="averageGrade" class="h3 text-success">-</div>
+                                        <small class="text-muted">Completed Assignments</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="nav nav-tabs" id="courseTab">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-bs-toggle="tab" href="#assignments">Assignments</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#grades">Grades</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" onclick="showSection('courses')">Courses</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="chatDropdown" role="button" data-bs-toggle="dropdown">
+                                    Chat
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#" onclick="openChat('faculty')">Connect with Faculty</a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="openChat('tutors')">Connect with Tutors</a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="openChat('students')">Connect with Students</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <div class="tab-content mt-3">
+                            <div class="tab-pane fade show active" id="assignments">
+                                <div class="list-group" id="assignmentsList"></div>
+                            </div>
+                            <div class="tab-pane fade" id="grades">
+                                <div class="table-responsive">
+                                    <table class="table" id="gradesTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Assignment</th>
+                                                <th>Due Date</th>
+                                                <th>Status</th>
+                                                <th>Grade</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="feedback">
+                                <div id="feedbackList" class="list-group"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+        <script src="https://kit.fontawesome.com/your-font-awesome-kit.js"></script>
+        <script>
+            // Load student data when page loads
+            window.addEventListener('DOMContentLoaded', function() {
+                const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+                if (!currentUser) {
+                    window.location.href = 'index.html';
+                    return;
+                }
+
+                // Get student data using student ID
+                const studentData = JSON.parse(localStorage.getItem('studentData_' + currentUser.id));
+                if (studentData) {
+                    // Update profile summary
+                    document.getElementById('studentName').textContent = studentData.name;
+                    document.getElementById('studentId').innerHTML = `<strong>Student ID:</strong> ${currentUser.id}`;
+                    document.getElementById('studentEmail').innerHTML = `<strong>Email:</strong> ${studentData.email}`;
+                    document.getElementById('studentPhone').innerHTML = `<strong>Phone:</strong> ${studentData.phoneNumber || ''}`;
+                    if (studentData.profilePhoto) {
+                        document.getElementById('mainProfilePhoto').src = studentData.profilePhoto;
+                        document.getElementById('profilePhotoDisplay').src = studentData.profilePhoto;
+                    }
+
+                    // Update contact details
+                    document.getElementById('contactEmail').innerHTML = `<strong>Email:</strong> ${studentData.email}`;
+                    document.getElementById('contactPhone').innerHTML = `<strong>Phone Number:</strong> ${studentData.phoneNumber || ''}`;
+                    document.getElementById('contactAddress').innerHTML = `<strong>Address:</strong> ${studentData.address}`;
+
+                    // Update enrollment details
+                    document.getElementById('enrollmentId').innerHTML = `<strong>Student ID:</strong> ${currentUser.id}`;
+                    document.getElementById('enrollmentCourse').innerHTML = `<strong>Course:</strong> ${studentData.course}`;
+                    document.getElementById('enrollmentSection').innerHTML = `<strong>Section:</strong> ${studentData.section}`;
+                    document.getElementById('enrollmentBatch').innerHTML = `<strong>Batch:</strong> ${studentData.batchId}`;
+                    document.getElementById('enrollmentDob').innerHTML = `<strong>DOB:</strong> ${studentData.dob}`;
+                    document.getElementById('enrollmentCategory').innerHTML = `<strong>Category:</strong> ${studentData.category}`;
+                    document.getElementById('enrollmentGender').innerHTML = `<strong>Gender:</strong> ${studentData.gender}`;
+                    document.getElementById('enrollmentState').innerHTML = `<strong>Domicile State:</strong> ${studentData.domicileState}`;
+                    document.getElementById('enrollmentLanguage').innerHTML = `<strong>Language spoken:</strong> ${studentData.language}`;
+                    document.getElementById('enrollmentReligion').innerHTML = `<strong>Religion:</strong> ${studentData.religion}`;
+                    document.getElementById('enrollmentBloodGroup').innerHTML = `<strong>Blood Group:</strong> ${studentData.bloodGroup}`;
+                    document.getElementById('enrollmentNationality').innerHTML = `<strong>Nationality:</strong> ${studentData.nationality}`;
+                    document.getElementById('enrollmentMaritalStatus').innerHTML = `<strong>Marital Status:</strong> ${studentData.maritalStatus}`;
+                    document.getElementById('enrollmentAadhar').innerHTML = `<strong>Aadhar Number:</strong> ${studentData.aadhar}`;
+                }
+            });
+
+            // Handle profile photo preview
+            const profilePhotoInput = document.getElementById("profilePhotoInput");
+            const profilePreview = document.getElementById("profilePreview");
+            const profilePhotoDisplay = document.getElementById("profilePhotoDisplay");
+            const mainProfilePhoto = document.getElementById("mainProfilePhoto");
+
+            // Function to show selected section
+            function showSection(sectionId) {
+                // Hide all sections
+                document.querySelectorAll('.details-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                // Show selected section
+                document.getElementById(sectionId).classList.add('active');
+            }
+
+            profilePhotoInput.addEventListener("change", function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        profilePreview.src = e.target.result;
+                        profilePhotoDisplay.src = e.target.result;
+                        mainProfilePhoto.src = e.target.result;
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Handle password change verification
+            document.getElementById("verifyCurrentPassword").addEventListener("click", function() {
+                const currentPassword = document.getElementById("currentPassword").value;
+            if (emailEl) emailEl.innerHTML = `<strong>Email:</strong> ${email}`;
+
+            // Close the modal
+            $('#settingsModal').modal('hide');
+        });
+
+        // Initialize chat button and menu
+        const chatButton = document.getElementById('chatButton');
+        const chatMenu = document.getElementById('chatMenu');
+
+        // Toggle chat menu when clicking the chat button
+        chatButton.addEventListener('click', function(e) {
+            e.stopPropagation();
+            chatMenu.classList.toggle('show');
+        });
+
+        // Close chat menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!chatMenu.contains(e.target) && !chatButton.contains(e.target)) {
+                chatMenu.classList.remove('show');
+            }
+        });
+
+        // Handle chat menu item clicks
+        document.querySelectorAll('.chat-menu-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const target = this.dataset.target;
+                const chatWindow = document.getElementById(target + 'Chat');
+                
+                // Close other chat windows
+                document.querySelectorAll('.chat-container').forEach(container => {
+                    if (container.id !== target + 'Chat') {
+                        container.style.display = 'none';
+                    }
+                });
+                
+                // Show current chat window
+                chatWindow.style.display = 'block';
+                const chatBody = chatWindow.querySelector('.chat-body');
+                chatBody.scrollTop = chatBody.scrollHeight;
+                
+                // Close the menu
+                chatMenu.classList.remove('show');
+            });
+        });
+
+        // Handle chat minimize buttons
+        document.querySelectorAll('.chat-minimize').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const chatWindow = this.closest('.chat-container');
+                chatWindow.style.display = 'none';
+                
+                // Remove active class from corresponding tab
+                const chatType = chatWindow.id.replace('Chat', '');
+                document.querySelector(`.chat-tab[data-target="${chatType}"]`).classList.remove('active');
+            });
+        });
+
+        // Handle sending messages
+        function sendMessage(chatType) {
+            const input = document.getElementById(chatType + 'ChatInput');
+            const message = input.value.trim();
+            if (message) {
+                const chatBody = document.getElementById(chatType + 'ChatBody');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'chat-message sent';
+                messageDiv.innerHTML = `
+                    <small class="d-block text-white-50">${new Date().toLocaleTimeString()}</small>
+                    ${message}
+                `;
+                chatBody.appendChild(messageDiv);
+                chatBody.scrollTop = chatBody.scrollHeight;
+                input.value = '';
+
+                // Simulate received message (for demo)
+                setTimeout(() => {
+                    const replyDiv = document.createElement('div');
+                    replyDiv.className = 'chat-message received';
+                    const replyMessages = {
+                        faculty: ["I will check and get back to you", "Please submit your assignment by tomorrow", "Good question! Let me explain..."],
+                        tutors: ["Would you like to schedule a tutoring session?", "Here is an example to help you understand", "Let me know if you need more help"],
+                        students: ["Thanks for sharing!", "When is the project submission?", "Can we form a study group?"]
+                    };
+                    const replies = replyMessages[chatType];
+                    const randomReply = replies[Math.floor(Math.random() * replies.length)];
+                    replyDiv.innerHTML = `
+                        <small class="d-block text-muted">${new Date().toLocaleTimeString()}</small>
+                        ${randomReply}
+                    `;
+                    chatBody.appendChild(replyDiv);
+                    chatBody.scrollTop = chatBody.scrollHeight;
+                }, 1000);
+            }
+        }
+
+        // Handle enter key in chat inputs
+        document.querySelectorAll('[id$="ChatInput"]').forEach(input => {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const chatType = this.id.replace('ChatInput', '');
+                    sendMessage(chatType);
+                }
+            });
+        });
+
+        // Initialize EmailJS
+        (function() {
+            emailjs.init("l6fs1Kn-ZWMm41jKO"); // Replace with your EmailJS public key
+        })();
+
+        // Handle password change
+        document.getElementById("saveSettings").addEventListener("click", async function() {
+            const currentPassword = document.getElementById("currentPassword").value;
+            const newPassword = document.getElementById("newPassword").value;
+            const confirmPassword = document.getElementById("confirmPassword").value;
+
+            // Check if password fields are filled
+            if (currentPassword || newPassword || confirmPassword) {
+                // Get current user's credentials
+                const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+                const storedCredentials = localStorage.getItem('credentials_' + currentUser.id);
+                
+                if (storedCredentials) {
+                    const credentials = JSON.parse(storedCredentials);
+
+                    // Verify current password
+                    if (currentPassword !== credentials.password) {
+                        alert('Current password is incorrect');
+                        return;
+                    }
+
+                    // Validate new password
+                    if (newPassword.length < 6) {
+                        alert('New password must be at least 6 characters long');
+                        return;
+                    }
+
+                    // Check if passwords match
+                    if (newPassword !== confirmPassword) {
+                        alert('New passwords do not match');
+                        return;
+                    }
+
+                    // Update password
+                    credentials.password = newPassword;
+                    localStorage.setItem('credentials_' + currentUser.id, JSON.stringify(credentials));
+                    alert('Password updated successfully!');
+
+                    // Clear password fields
+                    document.getElementById("currentPassword").value = '';
+                    document.getElementById("newPassword").value = '';
+                    document.getElementById("confirmPassword").value = '';
+                }
+            }
+        });
+
+        // Handle forgot password
+        document.getElementById("forgotPasswordLink").addEventListener("click", async function(e) {
+            e.preventDefault();
+            
+            const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+            const studentData = JSON.parse(localStorage.getItem('studentData_' + currentUser.id.replace('STU', '')));
+            
+            if (studentData && studentData.email) {
+                // Generate new password
+                const newPassword = Math.random().toString(36).slice(-8);
+                
+                try {
+                    // Send email with new password
+                    await emailjs.send(
+                        "service_sikshasahayakai", // Replace with your EmailJS service ID
+                        "template_shikshasahayaka", // Replace with your EmailJS template ID
+                        {
+                            to_email: studentData.email,
+                            to_name: studentData.name,
+                            new_password: newPassword,
+                            student_id: currentUser.id
+                        }
+                    );
+
+                    // Update password in storage
+                    const credentials = JSON.parse(localStorage.getItem('credentials_' + currentUser.id));
+                    credentials.password = newPassword;
+                    localStorage.setItem('credentials_' + currentUser.id, JSON.stringify(credentials));
+
+                    alert('A new password has been sent to your registered email address.');
+                } catch (error) {
+                    alert('Error sending password reset email. Please try again later.');
+                    console.error('Email error:', error);
+                }
+            } else {
+                alert('Unable to find your email address. Please contact support.');
+            }
+        });
+    </script>
+</body>
+</html>

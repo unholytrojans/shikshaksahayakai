@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .registration-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        .profile-preview {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin: 1rem auto;
+            display: block;
+        }
+        .required-field::after {
+            content: "*";
+            color: red;
+            margin-left: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="registration-container">
+            <h2 class="text-center mb-4">Student Registration</h2>
+            <form id="registrationForm" class="needs-validation" novalidate>
+                <!-- Profile Picture -->
+                <div class="text-center mb-4">
+                    <img id="profilePreview" src="https://via.placeholder.com/150" alt="Profile Preview" class="profile-preview mb-2">
+                    <div class="mb-3">
+                        <label for="profilePhoto" class="form-label required-field">Profile Picture</label>
+                        <input type="file" class="form-control" id="profilePhoto" accept="image/*" required>
+                        <div class="invalid-feedback">Please select a profile picture.</div>
+                    </div>
+                </div>
+
+                <div class="row g-3">
+                    <!-- Personal Information -->
+                    <div class="col-md-6">
+                        <label for="name" class="form-label required-field">Full Name</label>
+                        <input type="text" class="form-control" id="name" required>
+                        <div class="invalid-feedback">Please enter your full name.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="dob" class="form-label required-field">Date of Birth</label>
+                        <input type="date" class="form-control" id="dob" required>
+                        <div class="invalid-feedback">Please enter your date of birth.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="email" class="form-label required-field">Email</label>
+                        <input type="email" class="form-control" id="email" required>
+                        <div class="invalid-feedback">Please enter a valid email address.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="phoneNumber" class="form-label required-field">Phone Number</label>
+                        <input type="tel" class="form-control" id="phoneNumber" pattern="[0-9]{10}" required>
+                        <div class="invalid-feedback">Please enter a valid 10-digit phone number.</div>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="address" class="form-label required-field">Address</label>
+                        <textarea class="form-control" id="address" rows="2" required></textarea>
+                        <div class="invalid-feedback">Please enter your address.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="category" class="form-label required-field">Category</label>
+                        <select class="form-select" id="category" required>
+                            <option value="">Select Category</option>
+                            <option value="General">General</option>
+                            <option value="OBC">OBC</option>
+                            <option value="SC">SC</option>
+                            <option value="ST">ST</option>
+                        </select>
+                        <div class="invalid-feedback">Please select your category.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="gender" class="form-label required-field">Gender</label>
+                        <select class="form-select" id="gender" required>
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <div class="invalid-feedback">Please select your gender.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="domicileState" class="form-label required-field">Domicile State</label>
+                        <input type="text" class="form-control" id="domicileState" required>
+                        <div class="invalid-feedback">Please enter your domicile state.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="language" class="form-label required-field">Languages Spoken</label>
+                        <input type="text" class="form-control" id="language" placeholder="e.g., Hindi, English" required>
+                        <div class="invalid-feedback">Please enter languages spoken.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="religion" class="form-label required-field">Religion</label>
+                        <input type="text" class="form-control" id="religion" required>
+                        <div class="invalid-feedback">Please enter your religion.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="bloodGroup" class="form-label required-field">Blood Group</label>
+                        <select class="form-select" id="bloodGroup" required>
+                            <option value="">Select Blood Group</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                        </select>
+                        <div class="invalid-feedback">Please select your blood group.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="nationality" class="form-label required-field">Nationality</label>
+                        <input type="text" class="form-control" id="nationality" required>
+                        <div class="invalid-feedback">Please enter your nationality.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="aadhar" class="form-label required-field">Aadhar Number</label>
+                        <input type="text" class="form-control" id="aadhar" pattern="[0-9]{12}" required>
+                        <div class="invalid-feedback">Please enter a valid 12-digit Aadhar number.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="maritalStatus" class="form-label required-field">Marital Status</label>
+                        <select class="form-select" id="maritalStatus" required>
+                            <option value="">Select Marital Status</option>
+                            <option value="Single">Single</option>
+                            <option value="Married">Married</option>
+                            <option value="Divorced">Divorced</option>
+                        </select>
+                        <div class="invalid-feedback">Please select your marital status.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="course" class="form-label required-field">Course</label>
+                        <select class="form-select" id="course" required>
+                            <option value="">Select Course</option>
+                            <option value="BCA">BCA</option>
+                            <option value="BCOM">BCOM</option>
+                            <option value="BA">BA</option>
+                            <option value="MCA">MCA</option>
+                            <option value="BTech">BTech</option>
+                            <option value="MTech">MTech</option>
+                            <option value="PhD">PhD</option>
+                            <option value="MBA">MBA</option>
+                            <option value="MS">MS</option>
+                            <option value="MA">MA</option>
+                            <option value="MBBS">MBBS</option>
+                            <option value="MCom">MCom</option>
+                            <option value="MSc">MSc</option>
+                            <option value="MEd">MEd</option>
+                            <option value="MPhil">MPhil</option>
+                        </select>
+                        <div class="invalid-feedback">Please select your course.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="section" class="form-label required-field">Section</label>
+                        <select class="form-select" id="section" required>
+                            <option value="">Select Section</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                            <option value="E">E</option>
+                            <option value="F">F</option>
+                            <option value="G">G</option>
+                            <option value="H">H</option>
+                        </select>
+                        <div class="invalid-feedback">Please select your section.</div>
+                    </div>
+
+                    <!-- Batch ID -->
+                    <div class="col-12 mt-4">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            Please enter the Batch ID provided by your faculty to complete the registration.
+                        </div>
+                        <label for="batchId" class="form-label required-field">Batch ID</label>
+                        <input type="text" class="form-control" id="batchId" required>
+                        <div class="invalid-feedback">Please enter the Batch ID provided by faculty.</div>
+                    </div>
+
+                    <div class="col-12 mt-4">
+                        <button type="submit" class="btn btn-primary w-100">Complete Registration</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Profile photo preview
+        document.getElementById('profilePhoto').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profilePreview').src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Form validation
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!this.checkValidity()) {
+                e.stopPropagation();
+                this.classList.add('was-validated');
+                return;
+            }
+
+            // Get all form data
+            const formData = {
+                profilePhoto: document.getElementById('profilePreview').src,
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phoneNumber: document.getElementById('phoneNumber').value,
+                dob: document.getElementById('dob').value,
+                address: document.getElementById('address').value,
+                category: document.getElementById('category').value,
+                gender: document.getElementById('gender').value,
+                domicileState: document.getElementById('domicileState').value,
+                language: document.getElementById('language').value,
+                religion: document.getElementById('religion').value,
+                bloodGroup: document.getElementById('bloodGroup').value,
+                nationality: document.getElementById('nationality').value,
+                aadhar: document.getElementById('aadhar').value,
+                maritalStatus: document.getElementById('maritalStatus').value,
+                course: document.getElementById('course').value,
+                section: document.getElementById('section').value,
+                batchId: document.getElementById('batchId').value
+            };
+
+            // Validate Batch ID (this would typically check against a database)
+            const validBatchIds = ['BATCH2025', 'BATCH2026']; // Example batch IDs
+            if (!validBatchIds.includes(formData.batchId)) {
+                alert('Invalid Batch ID. Please contact your faculty for the correct Batch ID.');
+                return;
+            }
+
+            // Store user data (in a real application, this would be sent to a server)
+            const studentId = 'STU' + formData.aadhar; // Using Aadhar as unique identifier
+            const defaultPassword = formData.dob.split('-').join(''); // Using DOB as default password
+            
+            // Store student data with studentId
+            localStorage.setItem('studentData_' + studentId, JSON.stringify(formData));
+
+            // Create student credentials
+            const credentials = {
+                id: studentId,
+                password: defaultPassword,
+                type: 'student'
+            };
+            localStorage.setItem('credentials_' + studentId, JSON.stringify(credentials));
+
+            // Show success message with credentials
+            alert(`Registration successful!\n\nYour login credentials:\nUser ID: ${studentId}\nPassword: ${defaultPassword}\n\nPlease save these credentials and use them to login.`);
+            
+            // Redirect to login page
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>

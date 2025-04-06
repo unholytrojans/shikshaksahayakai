@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shiksha Sahayak Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #121212;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .background-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            display: grid;
+            grid-template-columns: repeat(20, 1fr);
+            grid-template-rows: repeat(20, 1fr);
+            gap: 5px;
+        }
+        
+        .background-rect {
+            background-color: rgba(40, 40, 40, 0.8);
+            border: 1px solid rgba(60, 60, 60, 0.5);
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .background-rect:hover {
+            background-color: rgba(80, 80, 80, 0.8);
+            transform: scale(1.2);
+            box-shadow: 0 0 15px rgba(100, 255, 255, 0.7);
+            border-color: rgba(100, 255, 255, 0.5);
+            z-index: 1;
+        }
+        
+        .login-container {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            width: 400px;
+            z-index: 10;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(100, 100, 100, 0.3);
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .login-header h1 {
+            color: #ffffff;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .login-header p {
+            color: #cccccc;
+        }
+        
+        .login-form .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .login-form label {
+            display: block;
+            margin-bottom: 8px;
+            color: #dddddd;
+            font-weight: 500;
+        }
+        
+        .login-form input {
+            width: 100%;
+            padding: 12px;
+            background-color: rgba(60, 60, 60, 0.5);
+            border: 1px solid rgba(80, 80, 80, 0.8);
+            border-radius: 4px;
+            font-size: 16px;
+            transition: all 0.3s;
+            color: #ffffff;
+        }
+        
+        .login-form input:focus {
+            outline: none;
+            border-color: #4070f4;
+            background-color: rgba(70, 70, 70, 0.7);
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #4070f4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .login-btn:hover {
+            background-color: #3060e0;
+        }
+        
+        .faculty-login {
+            text-align: center;
+            margin-top: 20px;
+            color: #aaaaaa;
+            cursor: pointer;
+        }
+        
+        .faculty-login p {
+            text-decoration: underline;
+            display: inline-block;
+            transition: color 0.3s;
+        }
+        
+        .faculty-login p:hover, .register-link a:hover {
+            color: #ffffff;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 15px;
+            color: #aaaaaa;
+        }
+
+        .register-link a {
+            color: #4070f4;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        ::placeholder {
+            color: #999999;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-container" id="backgroundContainer"></div>
+    
+    <div class="login-container">
+        <div class="login-header">
+            <h1 id="loginTitle">Shiksha Sahayak Login: Student Login</h1>
+            <p id="loginSubtitle">Enter your credentials to access the dashboard</p>
+        </div>
+        
+        <form class="login-form" id="loginForm">
+            <div class="form-group">
+                <label for="userId" id="userIdLabel">User ID</label>
+                <input type="text" id="userId" name="userId" placeholder="Enter your user ID" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+            
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+        
+        <div class="faculty-login" id="facultyLoginToggle">
+            <p>Faculty Login</p>
+        </div>
+        <div class="register-link">
+            <p>New student? <a href="student-registration.html">Register here</a></p>
+        </div>
+    </div>
+    
+    <script>
+        // Create background rectangles
+        const backgroundContainer = document.getElementById('backgroundContainer');
+        const rows = 20;
+        const cols = 20;
+        
+        for (let i = 0; i < rows * cols; i++) {
+            const rect = document.createElement('div');
+            rect.className = 'background-rect';
+            backgroundContainer.appendChild(rect);
+        }
+        
+        // Toggle between regular and faculty login
+        let isFacultyLogin = false;
+        const facultyLoginToggle = document.getElementById('facultyLoginToggle');
+        const loginTitle = document.getElementById('loginTitle');
+        const loginSubtitle = document.getElementById('loginSubtitle');
+        const userIdLabel = document.getElementById('userIdLabel');
+        const userIdInput = document.getElementById('userId');
+        
+        facultyLoginToggle.addEventListener('click', function() {
+            isFacultyLogin = !isFacultyLogin;
+            
+            if (isFacultyLogin) {
+                loginTitle.textContent = "Shiksha Sahayak Login: Faculty Login";
+                loginSubtitle.textContent = "Enter your faculty credentials"; 
+                userIdLabel.textContent = "Faculty ID";
+                userIdInput.placeholder = "Enter your faculty ID";
+                facultyLoginToggle.querySelector('p').textContent = "Student Login";
+            } else {
+                loginTitle.textContent = "Shiksha Sahayak Login: Student Login";
+                loginSubtitle.textContent = "Enter your credentials to access the dashboard";
+                userIdLabel.textContent = "User ID";
+                userIdInput.placeholder = "Enter your user ID";
+                facultyLoginToggle.querySelector('p').textContent = "Faculty Login";
+            }
+            
+            // Clear form fields
+            document.getElementById('userId').value = "";
+            document.getElementById('password').value = "";
+        });
+        
+        // Login validation
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const userId = document.getElementById('userId').value;
+            const password = document.getElementById('password').value;
+            
+            // Get registered student credentials from localStorage
+            let user = null;
+            
+            // Check built-in users first
+            const validUsers = [
+                { id: 'admin', password: 'admin123', type: 'admin' },
+                { id: 'faculty', password: 'faculty', type: 'faculty' }
+            ];
+            
+            user = validUsers.find(u => u.id === userId && u.password === password);
+            
+            // If not a built-in user, check registered students
+            if (!user) {
+                const storedCredentials = localStorage.getItem('credentials_' + userId);
+                if (storedCredentials) {
+                    const credentials = JSON.parse(storedCredentials);
+                    if (credentials.password === password) {
+                        user = credentials;
+                    }
+                }
+            }
+            
+            if (user) {
+                // Check if user type matches the login type
+                if ((isFacultyLogin && user.type !== 'faculty') || 
+                    (!isFacultyLogin && user.type === 'faculty')) {
+                    alert('Invalid credentials for this login type.');
+                    return;
+                }
+                
+                // Store user info in sessionStorage
+                sessionStorage.setItem('currentUser', JSON.stringify({
+                    id: user.id,
+                    type: user.type
+                }));
+                
+                //redirects user to page based on user type
+                if (user.type === 'faculty') {
+                    alert('Faculty login successful! Redirecting to faculty dashboard...');
+                    window.location.href = 'faculty.html';
+                } else if (user.type === 'student') {
+                    alert('Student login successful! Redirecting to student dashboard...');
+                    window.location.href = 'student-dashboard.html';
+                } else if (user.type === 'admin') {
+                    alert('Admin login successful! Redirecting to admin dashboard...');
+                    window.location.href = 'admin-dashboard.html';
+                }
+            } else {
+                alert('Invalid user ID or password. Please try again.');
+            }
+        });
+    </script>
+</body>
+</html>
